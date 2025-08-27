@@ -162,3 +162,141 @@ for(j=0; j<7; j++){
     }
     console.log(`Total de vendar por dia ${j} é ${somaPorDia}`)
 }
+
+let Poluicao = []
+for(let i=0; i<5; i++){
+    poluicao[i] = []
+    for(let j=0; j<5; j++){
+        do{
+            poluicao[i][j] = prompt(`Informe poluição da região ${regioes[i]} no dia ${dias[j]}`)
+        }
+        while(poluicao[i][j] < 0 || poluicao[i][j] > 500)
+    }
+}
+// Arrays auxiliares para regiões e dias
+const regioes = ['Norte', 'Sul', 'Leste', 'Oeste', 'Centro'];
+const dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+
+let poluicao = [];
+
+// Leitura dos dados com validação
+for(let i = 0; i < 5; i++) {
+    poluicao[i] = [];
+    for(let j = 0; j < 5; j++) {
+        do {
+            let valor = parseFloat(prompt(`Informe poluição da região ${regioes[i]} no dia ${dias[j]}`));
+            if (!isNaN(valor) && valor >= 0 && valor <= 500) {
+                poluicao[i][j] = valor;
+            } else {
+                alert('Valor inválido! Digite um número entre 0 e 500.');
+                poluicao[i][j] = -1; // Força nova iteração
+            }
+        } while (poluicao[i][j] < 0 || poluicao[i][j] > 500);
+    }
+}
+
+// 1. Diagonal principal e sua média
+console.log('=== DIAGONAL PRINCIPAL ===');
+let diagonalPrincipal = [];
+let somaDiagonalPrincipal = 0;
+
+for(let i = 0; i < 5; i++) {
+    diagonalPrincipal.push(poluicao[i][i]);
+    somaDiagonalPrincipal += poluicao[i][i];
+    console.log(`Região ${regioes[i]}, Dia ${dias[i]}: ${poluicao[i][i]}`);
+}
+
+let mediaDiagonalPrincipal = somaDiagonalPrincipal / 5;
+console.log(`Média da diagonal principal: ${mediaDiagonalPrincipal.toFixed(2)}`);
+
+// 2. Diagonal secundária e sua média
+console.log('\n=== DIAGONAL SECUNDÁRIA ===');
+let DiagonalSecundaria = [];
+let somaDiagonalSecundaria = 0;
+
+for(let i = 0; i < 5; i++) {
+    let j = 4 - i;
+    diagonalSecundaria.push(poluicao[i][j]);
+    somaDiagonalSecundaria += poluicao[i][j];
+    console.log(`Região ${regioes[i]}, Dia ${dias[j]}: ${poluicao[i][j]}`);
+}
+
+let mediaDiagonalSecundaria = somaDiagonalSecundaria / 5;
+console.log(`Média da diagonal secundária: ${mediaDiagonalSecundaria.toFixed(2)}`);
+
+// 3. Maior índice de poluição registrado
+let maiorIndice = -1;
+let regiaoMaior = '';
+let diaMaior = '';
+let linhaMaior = -1;
+let colunaMaior = -1;
+
+for(let i = 0; i < 5; i++) {
+    for(let j = 0; j < 5; j++) {
+        if (poluicao[i][j] > maiorIndice) {
+            maiorIndice = poluicao[i][j];
+            regiaoMaior = regioes[i];
+            diaMaior = dias[j];
+            linhaMaior = i;
+            colunaMaior = j;
+        }
+    }
+}
+
+console.log('\n=== MAIOR ÍNDICE DE POLUIÇÃO ===');
+console.log(`Maior índice: ${maiorIndice}`);
+console.log(`Região: ${regiaoMaior}`);
+console.log(`Dia: ${diaMaior}`);
+
+// 4. Quantidade de índices acima de 300 (nível crítico)
+let countCritico = 0;
+
+for(let i = 0; i < 5; i++) {
+    for(let j = 0; j < 5; j++) {
+        if (poluicao[i][j] > 300) {
+            countCritico++;
+        }
+    }
+}
+
+console.log('\n=== NÍVEL CRÍTICO (>300) ===');
+console.log(`Quantidade de registros acima de 300: ${countCritico}`);
+
+// 5. Região com menor média de poluição
+let menorMedia = Infinity;
+let regiaoMenorMedia = '';
+let mediasRegioes = [];
+
+for(let i = 0; i < 5; i++) {
+    let somaRegiao = 0;
+    for(let j = 0; j < 5; j++) {
+        somaRegiao += poluicao[i][j];
+    }
+    let mediaRegiao = somaRegiao / 5;
+    mediasRegioes.push(mediaRegiao);
+    
+    if (mediaRegiao < menorMedia) {
+        menorMedia = mediaRegiao;
+        regiaoMenorMedia = regioes[i];
+    }
+}
+
+console.log('\n=== REGIÃO COM MENOR MÉDIA ===');
+console.log(`Região: ${regiaoMenorMedia}`);
+console.log(`Média: ${menorMedia.toFixed(2)}`);
+
+// Exibição resumida no console
+console.log('\n=== RESUMO FINAL ===');
+console.log('Média diagonal principal:', mediaDiagonalPrincipal.toFixed(2));
+console.log('Média diagonal secundária:', mediaDiagonalSecundaria.toFixed(2));
+console.log('Maior índice:', maiorIndice, `(${regiaoMaior} - ${diaMaior})`);
+console.log('Registros acima de 300:', countCritico);
+console.log('Região com menor média:', regiaoMenorMedia, `(${menorMedia.toFixed(2)})`);
+
+// Exibição em alert para o usuário
+alert(`RESULTADOS:\n
+Média diagonal principal: ${mediaDiagonalPrincipal.toFixed(2)}
+Média diagonal secundária: ${mediaDiagonalSecundaria.toFixed(2)}
+Maior índice: ${maiorIndice} (${regiaoMaior} - ${diaMaior})
+Registros acima de 300: ${countCritico}
+Região com menor média: ${regiaoMenorMedia} (${menorMedia.toFixed(2)})`);
